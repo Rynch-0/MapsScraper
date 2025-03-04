@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Windows.Forms;
 
@@ -7,14 +7,14 @@ namespace MapsScraper
     partial class Form1
     {
         /// <summary>
-        ///Gerekli tasarımcı değişkeni.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        ///Kullanılan tüm kaynakları temizleyin.
+        /// Clean up any resources being used.
         /// </summary>
-        ///<param name="disposing">yönetilen kaynaklar dispose edilmeliyse doğru; aksi halde yanlış.</param>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -24,11 +24,11 @@ namespace MapsScraper
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer üretilen kod
+        #region Windows Form Designer generated code
 
         /// <summary>
-        /// Tasarımcı desteği için gerekli metot - bu metodun 
-        ///içeriğini kod düzenleyici ile değiştirmeyin.
+        /// Required method for designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -50,30 +50,26 @@ namespace MapsScraper
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(242, 43);
+            this.label1.Location = new System.Drawing.Point(226, 43);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.Size = new System.Drawing.Size(113, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "İl Seçimi";
+            this.label1.Text = "Provincial Election";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(242, 124);
+            this.label2.Location = new System.Drawing.Point(226, 124);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(69, 13);
+            this.label2.Size = new System.Drawing.Size(97, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "İlçe Seçimi";
+            this.label2.Text = "District Election";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // cmbIl
             // 
             this.cmbIl.FormattingEnabled = true;
-            this.cmbIl.Items.AddRange(new object[] {
-            "İstanbul",
-            "Ankara",
-            "İzmir"});
             this.cmbIl.Location = new System.Drawing.Point(212, 59);
             this.cmbIl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbIl.Name = "cmbIl";
@@ -104,7 +100,7 @@ namespace MapsScraper
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 10;
-            this.btnSearch.Text = "Arama";
+            this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
@@ -127,7 +123,6 @@ namespace MapsScraper
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -137,56 +132,54 @@ namespace MapsScraper
 
         private void cmbIlce_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Seçilen ilçe
+            // Selected district
             string selectedDistrict = cmbIlce.SelectedItem?.ToString();
 
             if (!string.IsNullOrEmpty(selectedDistrict))
             {
-                // İlçe seçildiğinde yapılacak işlemler
-                MessageBox.Show($"Seçilen ilçe: {selectedDistrict}");
+                // Actions when a district is selected
+                MessageBox.Show($"Selected district: {selectedDistrict}");
 
-                // Burada istediğiniz işlemleri yapabilirsiniz, örneğin:
-                // - Google Places API ile arama yapmak
-                // - Verileri filtrelemek
+                // You can perform desired actions here, such as:
+                // - Searching using Google Places API
+                // - Filtering data
             }
         }
 
-
         private async void CmbIl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Seçilen şehir
+            // Selected city
             string selectedCity = cmbIl.SelectedItem?.ToString();
 
             if (!string.IsNullOrEmpty(selectedCity))
             {
-                // İlçeleri almak için API URL'sini oluşturuyoruz
+                // Construct API URL to get districts
                 string url = $"https://turkiyeapi.dev/api/v1/provinces/{selectedCity}/districts";
 
-                var data = await FetchDataAsync(url); // Veriyi çekiyoruz
+                var data = await FetchDataAsync(url); // Fetch data
 
-                // Verinin doğru şekilde geldiğinden emin olduktan sonra işlemi yapalım
+                // Ensure data is retrieved correctly before proceeding
                 if (data != null && data.data != null && data.data.Count > 0)
                 {
-                    cmbIlce.Items.Clear(); // İlçe listesini temizliyoruz
+                    cmbIlce.Items.Clear(); // Clear district list
 
-                    // İlçe isimlerini ComboBox'a ekliyoruz
+                    // Add district names to ComboBox
                     foreach (var item in data.data)
                     {
-                        cmbIlce.Items.Add(item.name); // İlçe ismini ekliyoruz
+                        cmbIlce.Items.Add(item.name); // Add district name
                     }
                 }
                 else
                 {
-                    MessageBox.Show("İlçeler yüklenemedi.");
+                    MessageBox.Show("Districts could not be loaded.");
                 }
             }
             else
             {
-                // Şehir seçilmemişse, ilçeleri temizleyelim
+                // If no city is selected, clear districts
                 cmbIlce.Items.Clear();
             }
         }
-
 
         private void BtnExportExcel_Click(object sender, EventArgs e)
         {
@@ -208,4 +201,3 @@ namespace MapsScraper
         private System.Windows.Forms.Button btnSearch;
     }
 }
-
