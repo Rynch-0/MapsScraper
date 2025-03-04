@@ -34,7 +34,7 @@ namespace MapsScraper
             string selectedCity = cmbIl.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedCity))
             {
-                MessageBox.Show("Lütfen geçerli bir şehir seçin.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select a valid city.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -68,17 +68,17 @@ namespace MapsScraper
                     }
                     else
                     {
-                        MessageBox.Show("İlçeler verisi alınamadı.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Unable to fetch district data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("İller verisi doğru şekilde alınamadı.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The province data could not be retrieved correctly.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("İller verisi alınırken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error occurred while fetching province data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -95,7 +95,7 @@ namespace MapsScraper
             }
             else
             {
-                MessageBox.Show("Şehirler yüklenemedi.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Failed to load cities.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -111,14 +111,14 @@ namespace MapsScraper
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Veri çekme hatası: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error fetching data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)
         {
-            string apiKey = "AIzaSyBQAvkLKfY2tGlT3gwhjybKkrvqMsnj6TI";
+            string apiKey = "YOUR_GOOGLE_API_KEY";
             string keyword = txtKeyword.Text;
             string city = cmbIl.SelectedItem?.ToString();
             string district = cmbIlce.SelectedItem?.ToString();
@@ -141,13 +141,13 @@ namespace MapsScraper
                     }
                     else
                     {
-                        MessageBox.Show("Hiçbir sonuç bulunamadı.", "Sonuçlar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("No results found.", "Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -174,32 +174,31 @@ namespace MapsScraper
                     string pageContent = client.GetStringAsync(website).Result;
 
                     Match match = Regex.Match(pageContent, @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}");
-                    return match.Success ? match.Value : "E-posta bulunamadı";
+                    return match.Success ? match.Value : "Email not found";
                 }
             }
             catch
             {
-                return "E-posta alınamadı";
+                return "Email could not be fetched";
             }
         }
-
 
         private void ExportExcel(List<GooglePlace> places)
         {
             Excel.Application excelApp = new Excel.Application();
             if (excelApp == null)
             {
-                MessageBox.Show("Excel yüklü değil!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Excel is not installed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             Excel.Workbook workbook = excelApp.Workbooks.Add();
             Excel.Worksheet worksheet = (Excel.Worksheet)workbook.Sheets[1];
 
-            worksheet.Cells[1, 1] = "Firma Adı";
-            worksheet.Cells[1, 2] = "Telefon";
-            worksheet.Cells[1, 3] = "Adres";
-            worksheet.Cells[1, 4] = "E-posta";
+            worksheet.Cells[1, 1] = "Company Name";
+            worksheet.Cells[1, 2] = "Phone";
+            worksheet.Cells[1, 3] = "Address";
+            worksheet.Cells[1, 4] = "Email";
 
             int row = 2;
 
@@ -214,9 +213,9 @@ namespace MapsScraper
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                Filter = "Excel Dosyası|*.xlsx",
-                Title = "Excel Dosyası Kaydet",
-                FileName = "FirmaListesi.xlsx"
+                Filter = "Excel File|*.xlsx",
+                Title = "Save Excel File",
+                FileName = "CompanyList.xlsx"
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -224,7 +223,7 @@ namespace MapsScraper
                 workbook.SaveAs(saveFileDialog.FileName);
                 workbook.Close();
                 excelApp.Quit();
-                MessageBox.Show("Veriler Excel'e aktarıldı!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Data has been exported to Excel!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }
