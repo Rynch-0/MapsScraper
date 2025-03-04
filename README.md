@@ -26,7 +26,8 @@
 3️⃣ **Install** the required NuGet packages:  
    - Newtonsoft.Json  
    - Google.Apis  
-   - Microsoft.Office.Interop.Excel  
+   - Microsoft.Office.Interop.Excel
+   -  
 4️⃣ **Replace** `YOUR_GOOGLE_API_KEY` with your actual Google API Key.  
 5️⃣ **Build and run** the project.  
 
